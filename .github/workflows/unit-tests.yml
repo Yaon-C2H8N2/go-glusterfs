@@ -21,7 +21,6 @@ jobs:
           docker compose exec node2 mkdir -p /mnt/brick1/brick
           docker compose exec node3 mkdir -p /mnt/brick1/brick
       - name: Running tests
-        working-directory: ./test
-        run: go test -v
+        run: docker compose exec node1 go test /app/test -v
       - name: Stopping test env
         run: docker compose down
