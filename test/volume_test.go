@@ -17,7 +17,7 @@ func TestCreateVolume(t *testing.T) {
 		b := brick.Brick{Peer: p, Path: "/mnt/brick1/brick"}
 		bricks = append(bricks, b)
 	}
-	vol, err := volume.CreateVolume("testvol", bricks)
+	vol, err := volume.CreateReplicatedVolume("testvol", bricks)
 	if err != nil {
 		t.Fatalf("Failed to create volume: %s", err)
 	}

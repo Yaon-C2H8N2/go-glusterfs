@@ -11,20 +11,39 @@ import (
 	"strings"
 )
 
-func CreateVolume(name string, bricks []brick.Brick) (Volume, error) {
+func CreateReplicatedVolume(name string, bricks []brick.Brick) (Volume, error) {
 	brickString := ""
 	for _, b := range bricks {
 		brickString += "" + b.Peer.Hostname + ":" + b.Path + " "
 	}
 
-	cmd := exec.Command("gluster", "volume", "create", name, brickString)
+	cmd := exec.Command("gluster", "volume", "create", name, "replica", strconv.Itoa(len(bricks)), brickString)
 	out := bytes.Buffer{}
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
 		return Volume{}, err
 	}
-	return Volume{}, err
+	vol, err := GetVolume(name)
+	return vol, err
+}
+
+func GetVolume(name string) (Volume, error) {
+	cmd := exec.Command("gluster", "volume", "info", name)
+	out := bytes.Buffer{}
+	cmd.Stdout = &out
+	err := cmd.Run()
+	if err != nil {
+		return Volume{}, err
+	}
+	vol, err := parseVolumeList(out.String())
+	if err != nil {
+		return Volume{}, err
+	}
+	if len(vol) == 0 {
+		return Volume{}, errors.New("volume not found")
+	}
+	return vol[0], err
 }
 
 func ListVolumes() ([]Volume, error) {
