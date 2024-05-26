@@ -29,5 +29,8 @@ func TestListVolumes(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to list volumes: %s", err)
 	}
+	if len(v) == 0 {
+		t.Fatalf("No volumes found. At least one volume named 'testvol' should be present.")
+	}
 	t.Logf("Volumes: %+v", v)
 }

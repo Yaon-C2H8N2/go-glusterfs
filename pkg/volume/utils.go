@@ -12,12 +12,15 @@ import (
 )
 
 func CreateReplicatedVolume(name string, bricks []brick.Brick) (Volume, error) {
-	brickString := ""
+	var brickArgs []string
 	for _, b := range bricks {
-		brickString += "" + b.Peer.Hostname + ":" + b.Path + " "
+		brickArgs = append(brickArgs, b.Peer.Hostname+":"+b.Path)
 	}
+	args := []string{"volume", "create", name, "replica", strconv.Itoa(len(bricks))}
+	args = append(args, brickArgs...)
+	args = append(args, "force")
 
-	cmd := exec.Command("gluster", "volume", "create", name, "replica", strconv.Itoa(len(bricks)), brickString)
+	cmd := exec.Command("gluster", args...)
 	out := bytes.Buffer{}
 	cmd.Stdout = &out
 	err := cmd.Run()
