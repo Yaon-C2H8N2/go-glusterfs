@@ -1,0 +1,14 @@
+services:
+  node1:
+    build: ./docker/glusterfs-node/
+    privileged: true
+    volumes:
+      - .:/app
+
+  node2:
+    build: ./docker/glusterfs-node/
+    privileged: true
+
+  node3:
+    build: ./docker/glusterfs-node/
+    privileged: true
