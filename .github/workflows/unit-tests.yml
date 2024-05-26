@@ -17,9 +17,9 @@ jobs:
         run: docker compose up -d
       - name: Setting up test cluster
         run: \
-          docker compose exec node1 mkdir -p /mnt/brick1/brick &&\
-          docker compose exec node2 mkdir -p /mnt/brick1/brick &&\
-          docker compose exec node3 mkdir -p /mnt/brick1/brick \
+          docker compose exec node1 mkdir -p /mnt/brick1/brick; &&\
+          docker compose exec node2 mkdir -p /mnt/brick1/brick; &&\
+          docker compose exec node3 mkdir -p /mnt/brick1/brick; \
       - name: Running tests
         working-directory: ./test
         run: go test -v
