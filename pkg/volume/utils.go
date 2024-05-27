@@ -3,6 +3,7 @@ package volume
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"go-glusterfs.yaon.fr/pkg/brick"
 	"go-glusterfs.yaon.fr/pkg/peer"
 	"os/exec"
@@ -29,6 +30,33 @@ func CreateReplicatedVolume(name string, bricks []brick.Brick) (Volume, error) {
 	}
 	vol, err := GetVolume(name)
 	return vol, err
+}
+
+func DeleteVolume(name string) error {
+	cmd := exec.Command("gluster", "volume", "delete", name)
+	stdout := bytes.Buffer{}
+	stderr := bytes.Buffer{}
+	stdin, _ := cmd.StdinPipe()
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	err := cmd.Start()
+	if err != nil {
+		return err
+	}
+
+	// Deletion needs confirmation, no way to force it
+	if _, err := stdin.Write([]byte("y\n")); err != nil {
+		return err
+	}
+	stdin.Close()
+
+	err = cmd.Wait()
+	if err != nil {
+		return fmt.Errorf("%v: %s", err, stderr.String())
+	}
+
+	return err
 }
 
 func GetVolume(name string) (Volume, error) {
