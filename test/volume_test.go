@@ -17,11 +17,10 @@ func TestCreateVolume(t *testing.T) {
 		b := brick.Brick{Peer: p, Path: "/mnt/brick1/brick"}
 		bricks = append(bricks, b)
 	}
-	vol, err := volume.CreateReplicatedVolume("testvol", bricks)
+	_, err = volume.CreateReplicatedVolume("testvol", bricks)
 	if err != nil {
 		t.Fatalf("Failed to create volume: %s", err)
 	}
-	t.Logf("Created volume: %+v", vol)
 }
 
 func TestListVolumes(t *testing.T) {
@@ -32,5 +31,40 @@ func TestListVolumes(t *testing.T) {
 	if len(v) == 0 {
 		t.Fatalf("No volumes found. At least one volume named 'testvol' should be present.")
 	}
-	t.Logf("Volumes: %+v", v)
+}
+
+func TestStartVolume(t *testing.T) {
+	v, err := volume.GetVolume("testvol")
+	if err != nil {
+		t.Fatalf("Failed to get volume: %s", err)
+	}
+	err = v.Start()
+	if err != nil {
+		t.Fatalf("Failed to start volume: %s", err)
+	}
+}
+
+func TestStopVolume(t *testing.T) {
+	v, err := volume.GetVolume("testvol")
+	if err != nil {
+		t.Fatalf("Failed to get volume: %s", err)
+	}
+	err = v.Stop()
+	if err != nil {
+		t.Fatalf("Failed to stop volume: %s", err)
+	}
+}
+
+func TestDeleteVolume(t *testing.T) {
+	err := volume.DeleteVolume("testvol")
+	if err != nil {
+		t.Fatalf("Failed to delete volume: %s", err)
+	}
+}
+
+func TestDeleteWrongVolume(t *testing.T) {
+	err := volume.DeleteVolume("wrongvol")
+	if err == nil {
+		t.Fatalf("Deleting a non-existing volume should return an error")
+	}
 }
