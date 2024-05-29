@@ -1,7 +1,7 @@
 package test
 
 import (
-	"go-glusterfs.yaon.fr/pkg/peer"
+	"github.com/Yaon-C2H8N2/go-glusterfs/pkg/peer"
 	"testing"
 )
 

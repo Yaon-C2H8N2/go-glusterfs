@@ -1,9 +1,9 @@
 package test
 
 import (
-	"go-glusterfs.yaon.fr/pkg/brick"
-	"go-glusterfs.yaon.fr/pkg/peer"
-	"go-glusterfs.yaon.fr/pkg/volume"
+	"github.com/Yaon-C2H8N2/go-glusterfs/pkg/brick"
+	"github.com/Yaon-C2H8N2/go-glusterfs/pkg/peer"
+	"github.com/Yaon-C2H8N2/go-glusterfs/pkg/volume"
 	"testing"
 )
 
