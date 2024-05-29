@@ -3,7 +3,7 @@ package volume
 import (
 	"bytes"
 	"fmt"
-	"go-glusterfs.yaon.fr/pkg/brick"
+	"github.com/Yaon-C2H8N2/go-glusterfs/pkg/brick"
 	"os/exec"
 )
 
