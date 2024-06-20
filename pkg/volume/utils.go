@@ -96,18 +96,12 @@ func parseVolumeList(out string) ([]Volume, error) {
 	reVolumeName := regexp.MustCompile("^Volume Name:\\s*(\\S+)")
 	reType := regexp.MustCompile("^Type:\\s(\\S+)")
 	reStatus := regexp.MustCompile("^Status:\\s(\\S+)")
-	reNumberOfBricks := regexp.MustCompile("^Number of Bricks:\\s(\\S+)")
 	reBricks := regexp.MustCompile("^Brick(\\d):\\s*(\\S+)")
 
 	var volumeName string
-	var numberOfBricks int64
-	numberOfBricks = 0
 	for _, line := range lines {
 		isVolName, _ := regexp.MatchString(reVolumeName.String(), line)
 		if isVolName {
-			if numberOfBricks != 0 && int64(len(res[volumeName].Bricks)) != numberOfBricks {
-				return nil, errors.New("parsing error : number of bricks mismatched number of parsed bricks")
-			}
 			volumeName = reVolumeName.FindStringSubmatch(line)[1]
 			res[volumeName] = &Volume{Name: volumeName}
 		}
@@ -120,11 +114,6 @@ func parseVolumeList(out string) ([]Volume, error) {
 		isStatus, _ := regexp.MatchString(reStatus.String(), line)
 		if isStatus {
 			res[volumeName].Status = reStatus.FindStringSubmatch(line)[1]
-		}
-
-		isNumberOfBricks, _ := regexp.MatchString(reNumberOfBricks.String(), line)
-		if isNumberOfBricks {
-			numberOfBricks, _ = strconv.ParseInt(reNumberOfBricks.FindStringSubmatch(line)[1], 10, 64)
 		}
 
 		isBrick, _ := regexp.MatchString(reBricks.String(), line)
