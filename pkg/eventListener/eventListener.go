@@ -66,8 +66,12 @@ func (e *EventListener) listen() error {
 			if err != nil {
 				return err
 			}
-			go e.findVolumeUpdates(previousVolumes, volumes)
-			go e.findPeerUpdates(previousPeers, peers)
+			if e.OnVolumeUpdate != nil {
+				go e.findVolumeUpdates(previousVolumes, volumes)
+			}
+			if e.OnPeerUpdate != nil {
+				go e.findPeerUpdates(previousPeers, peers)
+			}
 			previousVolumes = volumes
 			previousPeers = peers
 		}

@@ -10,6 +10,7 @@ import (
 )
 
 func TestCreateVolume(t *testing.T) {
+	TestProbing(t)
 	peers, err := peer.ListPeers()
 	if err != nil {
 		t.Fatalf("Failed to list peers: %s", err)
@@ -100,46 +101,22 @@ func TestVolumeEvents(t *testing.T) {
 		t.Fatalf("Failed to start event listener: %s", err)
 	}
 
-	peers, err := peer.ListPeers()
-	if err != nil {
-		t.Fatalf("Failed to list peers: %s", err)
-	}
-	var bricks []brick.Brick
-	for _, p := range peers {
-		b := brick.Brick{Peer: p, Path: "/mnt/brick1/brick"}
-		bricks = append(bricks, b)
-	}
-	_, err = volume.CreateReplicatedVolume("testvol", bricks)
-	if err != nil {
-		t.Fatalf("Failed to create volume: %s", err)
-	}
+	TestCreateVolume(t)
 	// Wait for volume create event
 	time.Sleep(200 * time.Millisecond)
 	if !volCreated {
 		t.Fatalf("Volume create event not received")
 	}
 
-	v, err := volume.GetVolume("testvol")
-	if err != nil {
-		t.Fatalf("Failed to get volume: %s", err)
-	}
-	err = v.Start()
-	if err != nil {
-		t.Fatalf("Failed to start volume: %s", err)
-	}
-	err = v.Stop()
-	if err != nil {
-		t.Fatalf("Failed to stop volume: %s", err)
-	}
+	TestStartVolume(t)
+	TestStopVolume(t)
 	// Wait for volume events
 	time.Sleep(200 * time.Millisecond)
 	if !volStarted || !volStopped {
 		t.Fatalf("Volume start/stop events not received")
 	}
-	err = volume.DeleteVolume("testvol")
-	if err != nil {
-		t.Fatalf("Failed to delete volume: %s", err)
-	}
+
+	TestDeleteVolume(t)
 	// Wait for volume deletion event
 	time.Sleep(200 * time.Millisecond)
 	if !volDeleted {
