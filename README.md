@@ -12,7 +12,8 @@ welcome.
 
 - [x] Probe GlusterFS nodes
 - [x] Create and delete volumes
-- [x] Start volumes
+- [x] Start and stop volumes
+- [x] Event listener for volume and peer changes
 
 ## Example
 
