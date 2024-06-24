@@ -100,10 +100,12 @@ func TestVolumeEvents(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to start event listener: %s", err)
 	}
+	// Wait for listener to start
+	time.Sleep(300 * time.Millisecond)
 
 	TestCreateVolume(t)
 	// Wait for volume create event
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(300 * time.Millisecond)
 	if !volCreated {
 		t.Fatalf("Volume create event not received")
 	}
@@ -111,14 +113,14 @@ func TestVolumeEvents(t *testing.T) {
 	TestStartVolume(t)
 	TestStopVolume(t)
 	// Wait for volume events
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(300 * time.Millisecond)
 	if !volStarted || !volStopped {
 		t.Fatalf("Volume start/stop events not received")
 	}
 
 	TestDeleteVolume(t)
 	// Wait for volume deletion event
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(300 * time.Millisecond)
 	if !volDeleted {
 		t.Fatalf("Volume delete event not received")
 	}

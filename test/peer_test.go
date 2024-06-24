@@ -64,19 +64,17 @@ func TestPeerEvents(t *testing.T) {
 		t.Fatalf("Failed to start event listener: %s", err)
 	}
 	// Wait for listener to start
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(300 * time.Millisecond)
 
 	TestProbing(t)
 	// Wait for volume create event
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(300 * time.Millisecond)
 	if !peerProbed {
 		t.Fatalf("Peer probe event not received")
 	}
-
-	t.Logf("Detaching peers")
 	TestDetachPeer(t)
 	// Wait for volume deletion event
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(300 * time.Millisecond)
 	if !peerRemoved {
 		t.Fatalf("Peer remove event not received")
 	}
