@@ -54,27 +54,24 @@ func (e *EventListener) getIsStarted() bool {
 }
 
 func (e *EventListener) listen() error {
-	previousPoll := time.Now()
 	previousVolumes, previousPeers, err := e.poll()
 	if err != nil {
 		return err
 	}
 	for e.isStarted {
-		if time.Since(previousPoll).Milliseconds() > int64(e.pollingTimeout) {
-			previousPoll = time.Now()
-			volumes, peers, err := e.poll()
-			if err != nil {
-				return err
-			}
-			if e.OnVolumeUpdate != nil {
-				go e.findVolumeUpdates(previousVolumes, volumes)
-			}
-			if e.OnPeerUpdate != nil {
-				go e.findPeerUpdates(previousPeers, peers)
-			}
-			previousVolumes = volumes
-			previousPeers = peers
+		volumes, peers, err := e.poll()
+		if err != nil {
+			return err
 		}
+		if e.OnVolumeUpdate != nil {
+			go e.findVolumeUpdates(previousVolumes, volumes)
+		}
+		if e.OnPeerUpdate != nil {
+			go e.findPeerUpdates(previousPeers, peers)
+		}
+		previousVolumes = volumes
+		previousPeers = peers
+		time.Sleep(time.Duration(e.pollingTimeout) * time.Millisecond)
 	}
 	return nil
 }
